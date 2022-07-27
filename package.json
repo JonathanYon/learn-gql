@@ -21,9 +21,11 @@
   "homepage": "https://github.com/JonathanYon/learn-gql#readme",
   "dependencies": {
     "apollo-server": "^3.10.0",
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.0"
   },
   "devDependencies": {
