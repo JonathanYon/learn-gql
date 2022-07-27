@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { UserInputError } from "apollo-server";
 
 import userModel from "../../models/user.js";
-import { validateRegisterInput } from "../../utils/validators.js";
+import { validateRegisterInput, validateLoginInput } from "../../utils/validators.js";
+import { newToken } from "../../utils/token.js";
 
 export const userResolver = {
   Mutation: {
@@ -34,16 +34,7 @@ export const userResolver = {
           createdAt: new Date().toISOString(),
         }).save();
         console.log("xxxx>", newUser);
-        const token = jwt.sign(
-          {
-            id: newUser.id,
-            email: newUser.email,
-            username: newUser.username,
-            createdAt: newUser.createdAt,
-          },
-          process.env.SECRET,
-          { expiresIn: "1h" }
-        );
+        const token = newToken(newUser)
 
         return {
           email,
@@ -56,5 +47,37 @@ export const userResolver = {
         console.log(err);
       }
     },
+    async login(_, {username, password}){
+        try {
+            const {errors, valid} = validateLoginInput(username, password)
+            const user = await userModel.findOne({username})
+
+            if(!valid){
+                throw new UserInputError("Error", {errors})
+            } else {
+                if(!user){
+                    errors.general = "User not Found";
+                    throw new UserInputError('User not Found', {errors})
+                } else {
+                    const match = await bcrypt.compare(password, user.password)
+                    if(!match){
+                        errors.general = "User not Found";
+                        throw new UserInputError('Wrong credential', {errors})
+                    } else {
+                        const token = newToken(user)
+                        return {
+                            token,
+                            id: user._id,
+                            email: user.email,
+                            username: user.username,
+                            createdAt: user.createdAt
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
   },
 };
