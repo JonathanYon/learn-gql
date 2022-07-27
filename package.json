@@ -1,0 +1,32 @@
+{
+  "name": "learn-gql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonathanYon/learn-gql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonathanYon/learn-gql/issues"
+  },
+  "homepage": "https://github.com/JonathanYon/learn-gql#readme",
+  "dependencies": {
+    "apollo-server": "^3.10.0",
+    "dotenv": "^16.0.1",
+    "graphql": "^16.5.0",
+    "graphql-tag": "^2.12.6",
+    "mongoose": "^6.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
