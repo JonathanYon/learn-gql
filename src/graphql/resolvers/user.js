@@ -78,6 +78,7 @@ export const userResolver = {
         } catch (err) {
             console.log(err)
         }
-    }
+    },
+    
   },
 };

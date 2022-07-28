@@ -1,5 +1,6 @@
 import { userResolver } from "./user.js"
 import {PostResolver} from "./post.js"
+import { CommentResolver } from "./comments.js"
 
 
 const resolvers =  {
@@ -7,7 +8,9 @@ const resolvers =  {
         ...PostResolver.Query
     },
     Mutation: {
-        ...userResolver.Mutation
+        ...userResolver.Mutation,
+        ...PostResolver.Mutation,
+        ...CommentResolver.Mutation
     }
 }
 
