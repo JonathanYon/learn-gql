@@ -1,4 +1,4 @@
-import { AuthenticationError } from "apollo-server";
+import { AuthenticationError, UserInputError } from "apollo-server";
 
 import postModel from "../../models/post.js";
 import AuthMiddleware from "../../utils/authMidd.js";
@@ -68,12 +68,41 @@ export const PostResolver = {
               );
             }
           } else {
-            throw new Error(`Post ${postId} not found`);
+            throw new UserInputError(`Post ${postId} not found`);
           }
         }
       } catch (err) {
         throw new Error(err);
       }
     },
+
+    likePost: async (_, {postId}, ctx) => {
+      try {
+        const user = await AuthMiddleware(ctx)
+        if(user){
+          const post = await postModel.findById(postId)
+          if(post){
+            const like = post.likes.findIndex(like=> like.username === user.username )
+            console.log('like----', like);
+            if(like >= 0){
+              post.likes.splice(like, 1)
+            }else{
+              post.likes.push({
+                username: user.username,
+                createdAt: new Date().toISOString()
+              })
+            }
+            await post.save()
+            return post
+          }else{
+            throw new UserInputError(`post ${postId} not found`)
+          }
+        }else{
+          throw new AuthenticationError("Authentication Error!")
+        }
+      } catch (err) {
+        throw new Error(err)
+      }
+    }
   },
 };
