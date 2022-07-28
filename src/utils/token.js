@@ -11,3 +11,11 @@ export const newToken = (user) => {
         { expiresIn: "1h" }
       );
 }
+
+export const verifyToken = (token) =>
+  new Promise((resolve, reject) =>
+    jwt.verify(token, process.env.SECRET, (err, decodedToken) => {
+      if (err) reject(err);
+      resolve(decodedToken);
+    })
+  );
